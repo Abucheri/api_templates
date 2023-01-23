@@ -28,6 +28,7 @@ def all_items():
 def individual_item(item_id: int):
     if item_id <= 0:
         return JSONResponse(content={"error": "invalid item id"})
+    # use  try-except block to handle the case when the index is out of range
     try:
         item = items[item_id - 1]
     except IndexError:
