@@ -1,6 +1,8 @@
 from fastapi import FastAPI as fp
+from starlette.responses import JSONResponse
 
 # an object/instance for the API, this is the main point of interaction for the APIs
+
 app = fp()
 
 items = [{"title": "John Wick", "year": 2014}, {"title": "Black Adam", "year": 2022}]
@@ -24,4 +26,13 @@ def all_items():
 # getting items by id
 @app.get("/item/{item_id}")
 def individual_item(item_id: int):
-    return items[item_id - 1]
+    if item_id <= 0:
+        return JSONResponse(content={"error": "invalid item id"})
+    try:
+        item = items[item_id - 1]
+    except IndexError:
+        return JSONResponse(content = {"error": "item not found..."})
+    if item == 0:
+        return JSONResponse(content={"error": "item has been deleted"})
+    else:
+        return JSONResponse(content=item)
